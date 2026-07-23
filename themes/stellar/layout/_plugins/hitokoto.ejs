@@ -1,0 +1,155 @@
+<%
+  // 从配置中读取参数
+  const conf = typeof conf !== 'undefined' ? conf : {};
+  const title = conf.title || '今日一言';
+  const icon = conf.icon || 'fa-quote-left';
+  const source = conf.source || 'api';
+  const apiUrl = conf.api_url || 'https://v1.hitokoto.cn/?encode=json&charset=utf-8';
+  const localFile = conf.local_file || '/hitokoto.json';
+  const enableCache = conf.cache !== false;
+%>
+
+<!-- 一言插件 -->
+<div class="hitokoto-plugin">
+  <div class="hitokoto-container">
+    <% if (title) { %>
+      <div class="hitokoto-header">
+        <i class="<%= icon %>"></i> <%= title %>
+      </div>
+    <% } %>
+    <div class="hitokoto-body">
+      <p id="hitokoto-text">⏳ 加载中...</p>
+      <p id="hitokoto-from">—— </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const textEl = document.getElementById('hitokoto-text');
+    const fromEl = document.getElementById('hitokoto-from');
+    const source = '<%= source %>';
+    const apiUrl = '<%= apiUrl %>';
+    const localFile = '<%= localFile %>';
+    const enableCache = <%= enableCache %>;
+
+    // 渲染一言
+    function renderHitokoto(text, from) {
+      textEl.textContent = text || '生活不止眼前的苟且，还有诗和远方。';
+      fromEl.textContent = '—— ' + (from || '未知出处');
+    }
+
+    // 从 API 获取
+    function fetchFromApi() {
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          const text = data.hitokoto || data.text;
+          const from = data.from || data.source || '未知出处';
+          renderHitokoto(text, from);
+          
+          // 缓存
+          if (enableCache) {
+            localStorage.setItem('hitokoto_cache', JSON.stringify({
+              text: text,
+              from: from,
+              date: new Date().toDateString()
+            }));
+          }
+        })
+        .catch(() => {
+          renderHitokoto('愿你出走半生，归来仍是少年。', '网络');
+        });
+    }
+
+    // 从本地 JSON 获取
+    function fetchFromLocal() {
+      fetch(localFile)
+        .then(res => res.json())
+        .then(data => {
+          const list = Array.isArray(data) ? data : data.list || [];
+          if (list.length > 0) {
+            const item = list[Math.floor(Math.random() * list.length)];
+            renderHitokoto(item.text || item.hitokoto, item.from || item.source);
+          } else {
+            renderHitokoto('暂无一言数据', '');
+          }
+        })
+        .catch(() => {
+          renderHitokoto('愿你出走半生，归来仍是少年。', '网络');
+        });
+    }
+
+    // 检查缓存
+    if (enableCache) {
+      const cached = localStorage.getItem('hitokoto_cache');
+      if (cached) {
+        try {
+          const data = JSON.parse(cached);
+          const today = new Date().toDateString();
+          if (data.date === today) {
+            renderHitokoto(data.text, data.from);
+            return;
+          }
+        } catch (_) {}
+      }
+    }
+
+    // 根据配置获取数据
+    if (source === 'local') {
+      fetchFromLocal();
+    } else {
+      fetchFromApi();
+    }
+  })();
+</script>
+
+<style>
+  .hitokoto-plugin {
+    padding: 16px 20px;
+    background: var(--card-bg, #ffffff);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+  }
+  .hitokoto-plugin .hitokoto-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color, #333);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hitokoto-plugin .hitokoto-header i {
+    color: var(--primary-color, #4a90d9);
+  }
+  .hitokoto-plugin .hitokoto-body {
+    font-style: italic;
+    line-height: 1.9;
+  }
+  .hitokoto-plugin #hitokoto-text {
+    font-size: 15px;
+    margin: 0 0 4px 0;
+    color: var(--text-color, #2c3e50);
+    min-height: 1.5em;
+  }
+  .hitokoto-plugin #hitokoto-from {
+    text-align: right;
+    font-size: 13px;
+    color: var(--meta-color, #999);
+    margin: 4px 0 0 0;
+    letter-spacing: 0.5px;
+  }
+  /* 暗色模式适配 */
+  [data-theme="dark"] .hitokoto-plugin {
+    background: var(--card-bg, #1e1e1e);
+  }
+  [data-theme="dark"] .hitokoto-plugin #hitokoto-text {
+    color: var(--text-color, #e0e0e0);
+  }
+  [data-theme="dark"] .hitokoto-plugin #hitokoto-from {
+    color: var(--meta-color, #888);
+  }
+</style>

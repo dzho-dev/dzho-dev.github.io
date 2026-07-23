@@ -516,6 +516,18 @@ data_services:
 # 3. 如果这个插件只需要引入外部文件，可以在【步骤 1】处增加 inject 字段，而无需进入【步骤 2】创建 ejs，参考 katex
 plugins:
 
+  # 一言插件
+  hitokoto:
+    enable: true                          # 是否启用
+    title: 今日一言                        # 组件标题
+    icon: fa-quote-left                   # 图标
+    source: api                           # api 或 local
+    api_url: https://v1.hitokoto.cn/?encode=json&charset=utf-8
+    # 如果使用本地 json，配置下面这项
+    # local_file: /hitokoto.json
+    cache: false                           # 是否缓存到 localStorage
+    position: rightbar                    # 显示位置：rightbar / leftbar / both
+
   # preload
   preload:
     enable: true
