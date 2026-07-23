@@ -3,13 +3,40 @@ extends includes/layout.pug
 block content
     main.layout#content-inner
         #archive
+            //- 头部总标题，保持原有的
             .article-sort-title #{__('page.archives')}<sup>#{site.posts.find({parent: {$exists: false}}).length}</sup>
+
+            //- 使用 theme.page.archives 控制布局（0为列表，1为卡片）
             case theme.page.archives
                 when 0
                     .article-sort
-                        include includes/mixins/articleSort
+                        //- 获取所有文章并按年份分组
+                        - let postsByYear = {}
+                        - let posts = site.posts.find({parent: {$exists: false}}).data
+                        each post in posts
+                            - let year = date(post.date, 'YYYY')
+                            - if (!postsByYear[year]) postsByYear[year] = []
+                            - postsByYear[year].push(post)
+
+                        //- 遍历年份（倒序输出，2026 在前）
+                        each postList, year in postsByYear
+                            //- 年份分隔条
+                            .archive-year-group
+                                h2.archive-year-title= year
+                                    span.archive-year-line
+
+                                //- 遍历该年份下的文章
+                                each post in postList
+                                    .archive-post-item
+                                        //- 日期 (格式化为 MM-dd)
+                                        time.archive-post-date(datetime=date(post.date, 'YYYY-MM-DD'))= date(post.date, 'MM-dd')
+                                        //- 文章标题和链接
+                                        a.archive-post-title(href=url_for(post.path))= post.title
+
                     include includes/mixins/pagination
+
                 when 1
+                    //- 这里保留你原有的卡片模式，如有需要也可以按照上述年份逻辑拆分
                     .recent-posts#recent-posts
                         each post,index in page.posts.find({ parent: { $exists: false } }).data
                             include includes/widgets/home/postList
