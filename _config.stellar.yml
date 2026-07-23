@@ -1,10 +1,10 @@
 ######## Stellar info ########
-stellar:
-  version: '1.33.1'
-  homepage: 'https://xaoxuu.com/wiki/stellar/'
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
-  main_css: /css/main.css
-  main_js: /js/main.js
+# stellar:
+#   version: '1.33.1'
+#   homepage: 'https://xaoxuu.com/wiki/stellar/'
+#   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
+#   main_css: /css/main.css
+#   main_js: /js/main.js
 
 
 ######## head tags ########
@@ -205,7 +205,7 @@ search:
   service: local_search # local_search, algolia_search, todo...
   local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
     field: all # post, page, all
-    path: /search.json # 搜索文件存放位置
+    path: /search.xml # 搜索文件存放位置
     content: true # 是否搜索内容
     skip_search:  # 指定 path 中的内容不被搜索。
   algolia_search: # Docsearch https://docsearch.algolia.com/apply/ 申请
