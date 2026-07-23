@@ -4,12 +4,14 @@
 
 # Site
 title: dzho
-subtitle: ""
+subtitle: "世上本无事，庸人自扰之 | 一万年太久，只争朝夕"
+avatar: https://img.dzho.cn/img/m1000x1000.JPEG
 description: ""
 keywords: dzho
 author: dzho
 language: zh-CN
 timezone: Asia/Shanghai
+favicon: /img/favicon.ico
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
