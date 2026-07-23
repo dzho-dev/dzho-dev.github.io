@@ -16,7 +16,7 @@ favicon: /img/favicon.ico
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: https://blog.dzho.cn
-permalink: posts/:abbrlink/ # post为自定义前缀
+permalink: note/:abbrlink/ # post为自定义前缀
 abbrlink:
   alg: crc32 #算法： crc16(default) and crc32
   rep: hex #进制： dec(default) and hex
@@ -105,7 +105,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: stellar
+theme: solitude
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
