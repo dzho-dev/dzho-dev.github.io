@@ -28,8 +28,7 @@ block content
                                 //- 遍历该年份下的文章
                                 each post in postList
                                     .archive-post-item
-                                        //- 日期 (格式化为 MM-dd)
-                                        time.archive-post-date(datetime=date(post.date, 'YYYY-MM-DD'))= date(post.date, 'MM-dd')
+                                        time.archive-post-date(datetime=date(post.date, 'YYYY-MM-DD'))= date(post.date, 'MM-DD')
                                         //- 文章标题和链接
                                         a.archive-post-title(href=url_for(post.path))= post.title
 
